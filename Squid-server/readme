@@ -1,0 +1,10 @@
+This is a subproject for core server implementation.
+this project communicates with Client and web server to provide the service.
+
+Use build.xml to build
+
+exe - set of executable for running on system with the permittions.
+docs - generated documents will be saved here (use ant docs)
+jar - generated executable will be generated here, see manifest
+lib - libraries that will be used for GUI and api.jar to comminucate to client, and database
+build - generated classes and packages will be generated here.
