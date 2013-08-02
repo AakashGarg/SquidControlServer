@@ -1,0 +1,3 @@
+appi.jar - minimumm comntract followed between client and server for communication
+
+remotelib.jar - Minimumm contract to follow between between server and Web Server for dynamic compilation of files and generation of executables
