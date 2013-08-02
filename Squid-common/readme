@@ -1,0 +1,8 @@
+This is a subproject for an interface/contract to be followed by the client app and the server for communication to validate autherntication at client end.
+
+Use build.xml to build
+
+docs - generated documents will be saved here (use ant docs)
+jar - generated executable will be generated here, see manifest
+lib - libraries that will be used at client side for GUI and api.jar to comminucate to SquidControlServer
+build - generated classes and packages will be generated here.
