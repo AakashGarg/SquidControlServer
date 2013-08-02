@@ -1,0 +1,54 @@
+SquidControlServer
+==================
+
+This is a Project to secure a network like a wireless network.
+
+NOTE: the project is still in the phase of completion since I have to finalize some things.
+Altough I have tried my best to make all the subprojects loosely coupled from each other.
+Each subpoject is in a different folder so that if different teams are allocated the same project they can do it without disturbing the other sub-projects. 
+(the Project follows Singelton Design pattern i.e: only one instance can run)
+*we still need to do a little  modifications so that it can run on any computer as I'm lacking time to devote to it.
+
+this project was compiled and coded on Ubuntu 12.01 LTS
+
+REQUIREMENTS:
+*	2 network interface cards
+*	Apache ANT
+*	Apache Tomcat (for hosting web pages)
+*	Squid Server
+
+CURRENT LIMITATIONS : 
+* Since wireless passwords can be obtained using softwares like backtrack.
+* routers have a limitation on no of MAC Addresses they can store.
+* MAC address can be changed these days using softwares.
+* Block certain websites and links.
+
+NEED:
+* we need to secure the network against such hostile conditions such that we can give acess to a given gropup of identified people each with identified no of computers.
+
+IDEA
+Here we use can use a proxy server but how will it manage about changing MAC addresses or allowing or removing certain pople from a network.
+We create a utility such that it controls this Proxy server.
+
+ACHIVEMENTS:
+* A secure wireless network (in the worst case the wireless password, username and password of person is stolen)
+* A optimization no of connections by creatings sessions.
+* Optimizing bandwith.
+* caching pages & increasing speed.
+* A utility to connect.
+* this utility should be created dynamically on users demand.
+* it is copy secure (if copied cannot run on other systems).
+* The information to check the authentication of computer should not be taken from a file but should be hardcoded and encrypted into the program.
+* A web interface to make registrations and change details of authenticated computer.
+* A verification mechanism to verify the combination of username, password, and computer requesting connection.
+
+HOW TO INSTALL
+*We need to do a little modifications so that it can run on any computer.
+*	Use build.xml to build from source.
+*	It uses other build.xml (Since we have modulularized the build.xml)
+*	run 'sudo ant'
+
+HOW TO GENERATE DOCUMENTATION
+use ant docs
+
+YOU CAN USE OTHER OPTIONS, SEE build.xml in this directory only
