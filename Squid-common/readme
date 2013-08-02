@@ -1,5 +1,7 @@
 This is a subproject for an interface/contract to be followed by the client app and the server for communication to validate autherntication at client end.
 
+And minu=imumm contract netween server and web server.
+
 Use build.xml to build
 
 docs - generated documents will be saved here (use ant docs)
