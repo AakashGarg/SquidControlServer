@@ -1,4 +1,4 @@
-SquidControlServer
+SquidControlServer (Network Security)
 ==================
 
 This is a Project to secure a network like a wireless network.
@@ -16,19 +16,20 @@ REQUIREMENTS:
 *	Apache ANT
 *	Apache Tomcat (for hosting web pages)
 *	Squid Server
+*	copy the libraries in the antLib folder to ant lib folder in your computer.
 
 CURRENT LIMITATIONS : 
-* Since wireless passwords can be obtained using softwares like backtrack.
-* routers have a limitation on no of MAC Addresses they can store.
-* MAC address can be changed these days using softwares.
-* Block certain websites and links.
+	* Since wireless passwords can be obtained using softwares like backtrack.
+	* routers have a limitation on no of MAC Addresses they can store.
+	* MAC address can be changed these days using softwares.
+	* Block certain websites and links.
 
 NEED:
-* we need to secure the network against such hostile conditions such that we can give acess to a given gropup of identified people each with identified no of computers.
+	* we need to secure the network against such hostile conditions such that we can give acess to a given gropup of identified people each with identified no of computers.
 
 IDEA
-Here we use can use a proxy server but how will it manage about changing MAC addresses or allowing or removing certain pople from a network.
-We create a utility such that it controls this Proxy server.
+	Here we use can use a proxy server but how will it manage about changing MAC addresses or allowing or removing certain pople from a network.
+	We create a utility such that it controls this Proxy server.
 
 ACHIVEMENTS:
 * A secure wireless network (in the worst case the wireless password, username and password of person is stolen)
@@ -52,3 +53,10 @@ HOW TO GENERATE DOCUMENTATION
 use ant docs
 
 YOU CAN USE OTHER OPTIONS, SEE build.xml in this directory only
+
+HOW TO EDIT
+* Altough I prefer command line since this project was coded on notepad++ but I have tried my best so that one can integrate it with eclipse
+Just add all th above folder as projects
+and open the build.xml and run it to compile and run.
+
+FOR ANY FURTHER QUERIES OR DETAILS OR CONTIBUTION PLEASE CONTACT aakashgargnsit@gmail.com
