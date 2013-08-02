@@ -1,0 +1,9 @@
+This is a subproject for a web interface used by server to register or change user details.
+
+Use build.xml to build
+deploy.xml - to deploy
+
+Use SquidPage.war to deploy manually to server
+
+lib - libraries that will be used at client side for GUI and api.jar to comminucate to SquidControlServer
+build - generated classes and packages will be generated here.
