@@ -1,0 +1,59 @@
+<project name="SquidServer" basedir="." default="run">
+
+	<property name="src.dir" location="src" />
+	<property name="build.dir" location="build" />
+	<property name="classes.dir" location="${build.dir}/classes" />
+	<property name="jar.dir" location="jar" />
+	<property name="client.dir" location="client" />
+	<property name="docs.dir" location="docs" />
+
+	<target name="clean">
+		<delete dir="${classes.dir}">
+		</delete>
+		<delete dir="${build.dir}">
+		</delete>
+		<delete dir="${jar.dir}">
+		</delete>
+		<delete dir="${client.dir}">
+		</delete>
+		<delete dir="${docs.dir}">
+		</delete>
+	</target>
+
+	<target name="create">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${jar.dir}" />
+		<mkdir dir="${client.dir}" />
+		<mkdir dir="${docs.dir}" />
+	</target>
+
+	<target name="compile">
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" debug="on">
+			<classpath>
+				<dirset dir="../Squid-common">
+					<include name="src/**"/>
+				</dirset>
+			</classpath>
+		</javac>
+		<rmic classname="server.MyServer" destdir="${classes.dir}">
+		</rmic>
+		<rmic classname="server.MyServer" destdir="${classes.dir}">
+		</rmic>
+
+	</target>
+
+	<target name="run">
+		<java jar="${jar.dir}/SquidServer.jar">
+		</java>
+	</target>
+
+
+	<target name="docs">
+		<javadoc packagenames="src" sourcepath="${src.dir}" destdir="${docs.dir}">
+			<fileset>
+			</fileset>
+		</javadoc>
+	</target>
+
+</project>

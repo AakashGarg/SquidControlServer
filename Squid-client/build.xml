@@ -1,0 +1,71 @@
+<project name="Squid-client" basedir="." default="run">
+
+	<property name="src.dir" location="src" />
+	<property name="build.dir" location="build" />
+	<property name="classes.dir" location="${build.dir}/classes" />
+	<property name="jar.dir" location="jar" />
+	<property name="docs.dir" location="docs" />
+	<property name="lib.dir" location="lib" />
+
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar" />
+	</path>
+
+	<target name="clean">
+		<delete dir="${classes.dir}">
+		</delete>
+		<delete dir="${build.dir}">
+		</delete>
+		<delete dir="${jar.dir}">
+		</delete>
+		<delete dir="${docs.dir}">
+		</delete>
+	</target>
+
+	<target name="create">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${jar.dir}" />
+		<mkdir dir="${docs.dir}" />
+	</target>
+
+	<target name="compile">
+		<javac srcdir="${src.dir}" classpathref="classpath" destdir="${classes.dir}" debug="on">
+		</javac>
+	</target>
+
+	<target name="jar">
+		<unzip dest="${classes.dir}">
+			<fileset dir="${lib.dir}">
+				<include name="**/*.jar" />
+			</fileset>
+		</unzip>
+		<jar destfile="${jar.dir}/SquidClient.jar" basedir="build/classes">
+			<manifest>
+				<attribute name="Main-Class" value="client.ClientWindow" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="clean-compile" depends="clean,create,compile">
+	</target>
+
+	<target name="clean-compile-jar" depends="clean-compile,jar">
+	</target>
+
+	<target name="run">
+		<java jar="${jar.dir}/SquidClient.jar" fork="true">
+		</java>
+	</target>
+
+
+	<target name="docs">
+		<javadoc packagenames="src" classpathref="classpath" sourcepath="${src.dir}" destdir="${docs.dir}">
+			<!-- Define which files / directory should get included, we include all -->
+			<fileset dir="src">
+				<include name="**" />
+			</fileset>
+		</javadoc>
+	</target>
+
+</project>

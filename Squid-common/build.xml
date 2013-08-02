@@ -1,0 +1,45 @@
+<project name="Squid-common" basedir="." default="clean-compile">
+
+	<property name="src.dir" location="src" />
+	<property name="build.dir" location="build" />
+	<property name="classes.dir" location="${build.dir}/classes" />
+	<property name="jar.dir" location="jar" />
+	<property name="docs.dir" location="docs" />
+
+	<target name="clean">
+		<delete dir="${classes.dir}">
+		</delete>
+		<delete dir="${build.dir}">
+		</delete>
+		<delete dir="${jar.dir}">
+		</delete>
+		<delete dir="${docs.dir}">
+		</delete>
+	</target>
+
+	<target name="create">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${jar.dir}" />
+		<mkdir dir="${docs.dir}" />
+	</target>
+
+	<target name="compile">
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" debug="on">
+		</javac>
+	</target>
+	
+	<target name="clean-compile" depends="clean,create,compile">
+	</target>
+
+	
+	<target name="docs">
+		<javadoc packagenames="src" sourcepath="${src.dir}" destdir="${docs.dir}">
+			<!-- Define which files / directory should get included, we include all -->
+			<fileset dir="src">
+				<include name="**" />
+			</fileset>
+		</javadoc>
+	</target>
+
+</project>

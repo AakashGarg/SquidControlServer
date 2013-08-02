@@ -1,0 +1,147 @@
+<project name="Squid-server" basedir="." default="main">
+
+	<property name="common" location="Squid-common" />
+	<property name="server" location="Squid-server" />
+	<property name="client" location="Squid-client" />
+	<property name="SquidPage.lib" location="SquidPage/WebContent/WEB-INF/lib" />
+
+	<property name="src.dir" location="${server}/src" />
+	<property name="build.dir" location="${server}/build" />
+	<property name="classes.dir" location="${build.dir}/classes" />
+	<property name="jar.dir" location="${server}/jar" />
+	<property name="docs.dir" location="${server}/docs" />
+	<property name="lib.dir" location="${server}/lib" />
+
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar" />
+	</path>
+
+	<target name="clean">
+		<delete dir="${classes.dir}">
+		</delete>
+		<delete dir="${build.dir}">
+		</delete>
+		<delete dir="${jar.dir}">
+		</delete>
+		<delete dir="${docs.dir}">
+		</delete>
+	</target>
+
+	<target name="create">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${jar.dir}" />
+		<mkdir dir="${docs.dir}" />
+	</target>
+
+	<target name="compile-server">
+		<javac srcdir="${src.dir}" classpath="${common}/build/classes" classpathref="classpath" destdir="${classes.dir}" debug="on">
+		</javac>
+		<rmic classname="server.MyServer" classpath="${common}/build/classes" classpathref="classpath" base="${classes.dir}">
+		</rmic>
+		<rmic classname="server.SquidServer" classpath="${common}/build/classes" classpathref="classpath" base="${classes.dir}">
+		</rmic>
+		<rmic classname="server.clientCompiler.CompilerServer" classpath="${common}/build/classes" classpathref="classpath" base="${classes.dir}">
+		</rmic>
+	</target>
+
+	<target name="create-api" depends="compile-server">
+		<jar destfile="${lib.dir}/Squid-common.jar" basedir="${common}/build/classes">
+		</jar>
+		<copy todir="${common}/build/classes/server" flatten="true">
+			<fileset dir="${classes.dir}">
+				<include name="server/*_Stub.class" />
+			</fileset>
+		</copy>
+		<copy todir="${common}/build/classes/server/clientCompiler" flatten="true">
+			<fileset dir="${classes.dir}">
+				<include name="server/clientCompiler/*_Stub.class" />
+			</fileset>
+		</copy>
+		<jar destfile="${common}/jar/api.jar" basedir="${common}/build/classes" excludes="server/clientCompiler/**" />
+		<jar destfile="${common}/jar/remoteLib.jar" basedir="${common}/build/classes" includes="server/clientCompiler/**" />
+		<copy todir="${client}/lib" flatten="true">
+			<path>
+				<pathelement path="${common}/jar/api.jar" />
+			</path>
+		</copy>
+		<copy todir="${SquidPage.lib}" flatten="true">
+			<path>
+				<pathelement path="${common}/jar/remoteLib.jar" />
+			</path>
+		</copy>
+	</target>
+
+	<target name="jar">
+		<unzip dest="${classes.dir}">
+			<fileset dir="${lib.dir}">
+				<include name="**/*.jar" />
+			</fileset>
+		</unzip>
+		<jar destfile="${jar.dir}/SquidServer.jar" basedir="${classes.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="server.Server" />
+				<attribute name="Class-Path" value="${lib.dir}/Squid-Common.jar" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="run">
+		<java jar="${jar.dir}/SquidServer.jar" fork="true">
+		</java>
+	</target>
+
+
+	<target name="docs">
+		<subant target="docs">
+			<fileset dir="${common}" includes="build.xml" />
+		</subant>
+		<javadoc packagenames="src" sourcepath="${src.dir}" classpath="${common}/build/classes" classpathref="classpath" destdir="${docs.dir}">
+			<!-- Define which files / directory should get included, we include all -->
+			<fileset dir="${src.dir}">
+				<include name="**" />
+			</fileset>
+		</javadoc>
+		<subant target="docs">
+			<fileset dir="${client}" includes="build.xml" />
+		</subant>
+	</target>
+
+	<target name="clean-build">
+		<subant target="clean-compile">
+			<fileset dir="${common}" includes="build.xml" />
+		</subant>
+		<antcall target="clean" />
+		<antcall target="create" />
+		<antcall target="create-api" />
+		<antcall target="jar" />
+		<subant target="clean-compile-jar">
+			<fileset dir="${client}" includes="build.xml" />
+		</subant>
+		<subant target="all">
+			<fileset dir="SquidPage" includes="build.xml" />
+		</subant>
+
+	</target>
+
+	<target name="main" depends="clean-build">
+		<sequential>
+			<waitfor maxwait="30" maxwaitunit="second">
+				<available file="SquidPage/dist/SquidPage.war" />
+			</waitfor>
+			<subant target="deploy">
+				<fileset dir="SquidPage" includes="deploy.xml" />
+			</subant>
+			<antcall target="run">
+			</antcall>
+		</sequential>
+	</target>
+
+	<target name="reload">
+		<subant target="reload">
+			<fileset dir="SquidPage" includes="deploy.xml">
+			</fileset>
+		</subant>
+	</target>
+
+</project>

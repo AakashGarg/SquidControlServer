@@ -1,0 +1,169 @@
+package server.clientCompiler;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.jar.Attributes;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
+
+import javax.tools.JavaCompiler;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
+
+public class CompilerServer extends UnicastRemoteObject implements
+		CompilerRemote {
+	String serverIp;
+	String port;
+
+	public CompilerServer(String serverIp, String port) throws RemoteException {
+		this.serverIp = serverIp;
+		this.port = port;
+	}
+
+	public String compileAndJar(String userName, String macAddress)
+			throws RemoteException {
+		try {
+			System.out.print("Step 1: Creating source file - ");
+			File dir = new File("/home/aakash/workspace/Squid-client/test");
+			File dest = new File(dir, "dist");
+			File sourceFile = new File(dir, "ClientReferenceFile.java");
+			File clientFile = new File(dir, "Client.java");
+			String line = "";
+			BufferedReader br = new BufferedReader(new FileReader(sourceFile));
+			PrintWriter writer = new PrintWriter(clientFile);
+			while ((line = br.readLine()) != null) {
+				if (line.indexOf("aakashgarg") >= 0) {
+					line = line.replace("aakashgarg", userName);
+				} else if (line.indexOf("78-DD-08-C9-94-3A") >= 0) {
+					line = line.replace("78-DD-08-C9-94-3A", macAddress);
+				}
+				writer.println(line);
+			}
+			writer.flush();
+			writer.close();
+			System.out.println("done");
+			System.out.print("Step 2: Compiling file - ");
+			compileClass(dir, dest);
+			System.out.println(new File(dest, "client/Client.class").exists());
+			System.out.print("Step 3: Creating jar - ");
+
+			// createJar(dir,userName+".jar");
+			System.out
+					.println("Step 4: Deleting File - " + clientFile.delete());
+			System.out.println("jar created for user:" + userName
+					+ " with mac id: " + macAddress);
+			return serverIp + ":" + port;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	private synchronized static void createJar(String userName, File dir)
+			throws IOException, InterruptedException {
+		createJar(dir, userName + ".jar");
+		/*
+		 * Process p = null; p = Runtime.getRuntime().exec("sudo cd " +
+		 * dir.getPath()); p.waitFor(); p = Runtime.getRuntime().exec(
+		 * "sudo jar -cmf manifest.txt " + userName +
+		 * ".jar client ipMac net server"); p.waitFor();
+		 */
+		System.out.println("done");
+	}
+
+	private static synchronized void compileClass(File src, File dst)
+			throws IOException {
+		// String rootPath = "/home/aakash/workspace/Squid-client/test/";
+		String rootPath = dst.getPath();
+		String classpath = rootPath;
+		System.out.println("--> dest Path " + rootPath);
+		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+		List<String> optionList = new ArrayList<String>();
+		optionList.addAll(Arrays.asList("-classpath", classpath));
+		optionList.addAll(Arrays.asList("-d", rootPath));
+		StandardJavaFileManager sjfm = compiler.getStandardFileManager(null,
+				null, null);
+		File[] files = { new File(src.getPath() + "/" + "Client.java") };
+		Iterable fileObjects = sjfm.getJavaFileObjects(files);
+		JavaCompiler.CompilationTask task = compiler.getTask(null, null, null,
+				optionList, null, fileObjects);
+		task.call();
+		sjfm.close();
+	}
+
+	private static synchronized void createJar(File dir, String jarName)
+			throws FileNotFoundException, IOException {
+		Manifest manifest = new Manifest();
+		manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION,
+				"1.0");
+		manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS,
+				"client.ClientWindow");
+		JarOutputStream target = new JarOutputStream(new FileOutputStream(
+				new File(dir, jarName)), manifest);
+		add(dir, target);
+		target.close();
+	}
+
+	private static synchronized void add(File source, JarOutputStream target)
+			throws IOException {
+		BufferedInputStream in = null;
+		try {
+			if (source.isDirectory()) {
+				String name = source.getPath().replace("\\", "/");
+				if (!name.isEmpty()) {
+					if (!name.endsWith("/"))
+						name += "/";
+					JarEntry entry = new JarEntry(name.replace(source.getPath()
+							+ "/", ""));
+					entry.setTime(source.lastModified());
+					target.putNextEntry(entry);
+					target.closeEntry();
+				}
+				for (File nestedFile : source.listFiles())
+					add(nestedFile, target);
+				return;
+			}
+
+			JarEntry entry = new JarEntry(source.getPath().replace("\\", "/")
+					.replace(source.getPath() + "/", ""));
+			entry.setTime(source.lastModified());
+			target.putNextEntry(entry);
+			in = new BufferedInputStream(new FileInputStream(source));
+
+			byte[] buffer = new byte[1024];
+			while (true) {
+				int count = in.read(buffer);
+				if (count == -1)
+					break;
+				target.write(buffer, 0, count);
+			}
+			target.closeEntry();
+		} finally {
+			if (in != null)
+				in.close();
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private synchronized static void compileAndJar(String userName)
+			throws IOException, InterruptedException {
+		Process p = null;
+		p = Runtime.getRuntime().exec(
+				"sudo /home/aakash/Desktop/SquidRMI/classes/CompileAndJar "
+						+ userName);
+		p.waitFor();
+	}
+
+}
