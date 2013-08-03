@@ -13,6 +13,7 @@ import javax.servlet.ServletContextListener;
 /**
  *
  * @author Aakash
+	DBMS username and password are to be generalized
  */
 public class DBConnectionInit implements ServletContextListener {
 
