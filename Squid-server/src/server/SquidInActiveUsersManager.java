@@ -40,11 +40,8 @@ public class SquidInActiveUsersManager implements Runnable {
 				PreparedStatement ps = con.prepareStatement(query);
 				for (String ip : currentUsers.keySet()) {
 					long lastTime = currentUsers.get(ip);
-					if (((now - lastTime) >= 30 * 1000)/*
-														 * &&
-														 * (ip.equals("192.168.1.6"
-														 * )==false)
-														 */) {
+					if (((now - lastTime) >= 30 * 1000)
+					/* &&(ip.equals("192.168.1.6")==false)*/) {
 						ps.setString(1, ip);
 						ps.executeUpdate();
 						currentUsers.remove(ip);
