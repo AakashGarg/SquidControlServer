@@ -30,7 +30,7 @@ public class RetrieveJar extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 6386977880497629254L;
-	static String serverIpAndPort = "127.0.0.1:1099";
+	static String serverIpAndPort = "127.0.0.1:1099";	//change this ip if compiler server is on other computer
 
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
