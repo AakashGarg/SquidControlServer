@@ -16,9 +16,9 @@ REQUIREMENTS:
 *	Apache ANT
 *	Apache Tomcat (for hosting web pages)
 *	Squid Server
-*	copy the libraries in the antLib folder to ant lib folder in your computer.
+*	copy the libraries contained in the antLib folder to ant lib folder in your computer.
 
-CURRENT LIMITATIONS : 
+LIMITATIONS OF EXISTING SYSTEM / MOTIVATION: 
 	* Since wireless passwords can be obtained using softwares like backtrack.
 	* routers have a limitation on no of MAC Addresses they can store.
 	* MAC address can be changed these days using softwares.
@@ -46,11 +46,11 @@ ACHIVEMENTS:
 HOW TO INSTALL
 *We need to do a little modifications so that it can run on any computer.
 *	Use build.xml to build from source.
-*	It uses other build.xml (Since we have modulularized the build.xml)
-*	run 'sudo ant'
+*	It uses other build.xml(s) (Since we have modulularized the build.xml)
+*	run 'sudo ant' on ubuntu
 
 HOW TO GENERATE DOCUMENTATION
-use ant docs
+use 'ant docs'
 
 YOU CAN USE OTHER OPTIONS, SEE build.xml in this directory only
 
